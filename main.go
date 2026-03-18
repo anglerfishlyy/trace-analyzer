@@ -58,3 +58,22 @@ func findSlowest(span *Span) *Span {
 
 	return slowest
 }
+func findCriticalPath(span *Span) ([]string, int) {
+	path := []string{span.Name}
+	total := span.Duration
+
+	if len(span.Children) == 0 {
+		return path, total
+	}
+
+	var maxChild *Span
+	for _, child := range span.Children {
+		if maxChild == nil || child.Duration > maxChild.Duration {
+			maxChild = child
+		}
+	}
+
+	childPath, childTotal := findCriticalPath(maxChild)
+
+	return append(path, childPath...), total + childTotal
+}
