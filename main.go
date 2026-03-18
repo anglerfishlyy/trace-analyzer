@@ -46,3 +46,15 @@ func printTrace(span *Span, level int) {
 		printTrace(child, level+1)
 	}
 }
+func findSlowest(span *Span) *Span {
+	slowest := span
+
+	for _, child := range span.Children {
+		candidate := findSlowest(child)
+		if candidate.Duration > slowest.Duration {
+			slowest = candidate
+		}
+	}
+
+	return slowest
+}
