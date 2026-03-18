@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"os"
+	"fmt"
+)
 
 // Span represents a unit of work in a trace
 type Span struct {
@@ -78,7 +81,12 @@ func findCriticalPath(span *Span) ([]string, int) {
 	return append(path, childPath...), total + childTotal
 }
 func main() {
-	traceID := "abc123"
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run main.go <traceID>")
+		return
+	}
+
+	traceID := os.Args[1]
 	trace := getMockTrace()
 
 	fmt.Println("TraceID:", traceID)
