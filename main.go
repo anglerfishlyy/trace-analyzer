@@ -77,3 +77,27 @@ func findCriticalPath(span *Span) ([]string, int) {
 
 	return append(path, childPath...), total + childTotal
 }
+func main() {
+	traceID := "abc123"
+	trace := getMockTrace()
+
+	fmt.Println("TraceID:", traceID)
+	fmt.Println("\nTrace Tree:")
+	printTrace(trace, 0)
+
+	path, total := findCriticalPath(trace)
+
+	fmt.Println("\nCritical Path:")
+	for i, p := range path {
+		if i > 0 {
+			fmt.Print(" → ")
+		}
+		fmt.Print(p)
+	}
+	fmt.Println()
+
+	fmt.Printf("\nTotal Latency: %dms\n", total)
+
+	slowest := findSlowest(trace)
+	fmt.Printf("\nSlowest Span:\n%s (%dms)\n", slowest.Name, slowest.Duration)
+}
