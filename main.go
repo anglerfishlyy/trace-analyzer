@@ -36,3 +36,13 @@ func getMockTrace() *Span {
 		},
 	}
 }
+func printTrace(span *Span, level int) {
+	for i := 0; i < level; i++ {
+		fmt.Print("  ")
+	}
+	fmt.Printf("%s (%dms)\n", span.Name, span.Duration)
+
+	for _, child := range span.Children {
+		printTrace(child, level+1)
+	}
+}
